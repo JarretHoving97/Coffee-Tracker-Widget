@@ -63,11 +63,17 @@ public struct CoffeeCupIcon: View {
     }
 
     private func addCoffee() {
-        coffeeCount += 1
-        let calc = Double(coffeeCount) / 10.0 * 100
-        percent = min(calc, 100)
 
-        withAnimation(.linear(duration: 1.0).repeatCount(2, autoreverses: false)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() ) {
+            coffeeCount += 1
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let calc = Double(coffeeCount) / 10.0 * 100
+            percent = min(calc, 100)
+        }
+        withAnimation(
+            .linear(duration: 1.0).repeatCount(2, autoreverses: false)
+        ) {
             waveOffset = Angle(degrees: 360)
         }
 
