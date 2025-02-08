@@ -10,15 +10,15 @@ import Foundation
 
 class TrackerStore {
 
-    let store = [String: Int]()
+    private(set) var store = [String: Int]()
 
     /// retrieves tracked number
     func retrieve(_ date: Date) -> Int? {
-        return nil
+    return store[formatDate(date)]
     }
 
     func store(number: Int, for date: Date) {
-
+        store[formatDate(date)] = number
     }
 
     // Function to format a Date to a string (e.g., "2025-02-08")
@@ -39,6 +39,12 @@ struct CoffeeFrameworkTests {
     @Test func doesReturnZeroWehaveNotTrackedForDate() {
         let sut = makeSUT()
         #expect(sut.retrieve(Date()) == nil)
+    }
+
+    @Test func doesNotReturnZeroWhenWeHaveTrackedForDate() {
+        let sut = makeSUT()
+        sut.store(number: 1, for: Date())
+        #expect(sut.retrieve(Date()) != nil)
     }
 
     // MARK: Helpers
