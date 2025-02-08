@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "3509C6B1-A6BC-4C46-8052-02231A77B2C0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Track My Coffee.xcodeproj",
+        "identifier" : "311735F32D580A2600DC5408",
+        "name" : "CoffeeFrameworkTests"
+      }
+    }
+  ],
+  "version" : 1
+}

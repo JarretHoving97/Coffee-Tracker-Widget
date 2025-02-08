@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AppIntents
+
 
 public struct CoffeeCupIcon: View {
     @State private var percent = 0.0
@@ -13,7 +15,11 @@ public struct CoffeeCupIcon: View {
     @AppStorage("coffeeCount", store: UserDefaults(suiteName: "group.com.jarretdevs.TrackMyCoffee")) private var coffeeCount: Int = 0
     @AppStorage("lastSavedDate", store: UserDefaults(suiteName: "group.com.jarretdevs.TrackMyCoffee")) private var lastSavedDate: String = ""
 
-    public init() {}
+    let intent: any AppIntent
+
+    public init(intent: any AppIntent) {
+        self.intent = intent
+    }
 
     public var body: some View {
         HStack {
@@ -46,6 +52,13 @@ public struct CoffeeCupIcon: View {
                 Text(coffeeCount.description)
                     .font(.largeTitle)
                     .bold()
+
+                Button(intent: intent) {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundStyle(.black)
+                }
 
                 Button {
                     addCoffee()
@@ -125,9 +138,4 @@ struct CupShape: Shape {
         path.closeSubpath()
         return path
     }
-}
-
-
-#Preview {
-    CoffeeCupIcon()
 }
