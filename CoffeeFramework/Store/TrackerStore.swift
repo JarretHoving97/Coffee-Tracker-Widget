@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TrackerStore {
+public class TrackerStore: TrackerStoreProtocol {
 
     private let defaults: UserDefaults
     private let storageKey: String
