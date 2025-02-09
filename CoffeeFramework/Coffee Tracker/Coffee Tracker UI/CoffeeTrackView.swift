@@ -49,24 +49,43 @@ public struct CoffeeCupIcon: View {
                     .offset(y: -60)
             }
 
-            VStack {
+            VStack(alignment: .leading) {
                 Text(viewModel.coffeeCount.description)
                     .font(.largeTitle)
                     .bold()
 
-                Button {
-                    addCoffee()
-                } label: {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.black)
+                HStack (spacing: 20) {
+                    Button {
+                        addCoffee()
+                    } label: {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(.black)
+                    }
+
+                    Button {
+                        removeCoffee()
+                    } label: {
+                        Image(systemName: "minus")
+                            .resizable()
+                            .frame(width: 20, height: 2)
+                            .foregroundStyle(.black)
+                    }
                 }
             }
         }
         .onAppear {
             loadView()
         }
+    }
+
+    private func removeCoffee() {
+        DispatchQueue.main.asyncAfter(deadline: .now() ) {
+            viewModel.decrement()
+        }
+
+        loadView()
     }
 
     private func addCoffee() {
