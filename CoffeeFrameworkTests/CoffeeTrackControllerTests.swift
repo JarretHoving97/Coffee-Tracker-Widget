@@ -41,10 +41,32 @@ class CoffeeTrackController {
 struct CoffeeTrackControllerTests {
 
     @Test func doesInit() async throws {
+        let sut = makeSUT()
+        #expect(sut != nil)
+    }
+
+    @Test func doesIncrementCoffeeCount() async throws {
+        let sut = makeSUT()
+        sut.perform(.increment)
+
+        #expect(sut.count == 1)
+    }
+
+    @Test func doesDecrementCoffeeCount() async throws {
+        let sut = makeSUT()
+        sut.perform(.increment)
+        sut.perform(.decrement)
+
+        #expect(sut.count == 0)
+    }
+
+    // MARK: Helpers
+
+    private func makeSUT() -> CoffeeTrackController {
         let mock = TrackerStoreMock()
         let sut = CoffeeTrackController(date: Date.now, store: mock)
 
-        #expect(mock != nil && sut != nil)
+        return sut
     }
 }
 
