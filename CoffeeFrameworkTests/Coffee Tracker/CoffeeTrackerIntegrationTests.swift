@@ -56,11 +56,9 @@ class CoffeeTrackerIntegrationTests {
         sut.perform(.increment)
         let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!
 
-        let newSUT = makeSUT(for: nextDay
-        )
+        let newSUT = makeSUT(for: nextDay)
         #expect(newSUT.count == 0)
     }
-
 
     // MARK: Helpers
 
