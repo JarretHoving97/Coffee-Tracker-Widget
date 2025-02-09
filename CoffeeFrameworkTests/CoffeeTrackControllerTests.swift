@@ -20,7 +20,7 @@ class CoffeeTrackController {
     private let date: Date
 
     var count: Int {
-        return store.retrieve(date) ?? 0
+        return max(store.retrieve(date) ?? 0, 0)
     }
 
     init(date: Date, store: TrackerStoreProtocol) {
@@ -57,6 +57,13 @@ struct CoffeeTrackControllerTests {
         sut.perform(.increment)
         sut.perform(.decrement)
 
+        #expect(sut.count == 0)
+    }
+
+    @Test func doesNotDecrementOnZero() async throws {
+        let sut = makeSUT()
+        sut.perform(.decrement)
+        
         #expect(sut.count == 0)
     }
 
