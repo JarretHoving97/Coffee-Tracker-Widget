@@ -54,7 +54,7 @@ public struct CoffeeCupIcon: View {
                     .font(.largeTitle)
                     .bold()
 
-                HStack (spacing: 20) {
+                HStack(spacing: 20) {
                     Button {
                         addCoffee()
                     } label: {
@@ -114,8 +114,7 @@ public struct CoffeeCupIcon: View {
     }
 }
 
-// Deksel
-struct LidShape: Shape {
+fileprivate struct LidShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         path.addRoundedRect(in: rect, cornerSize: CGSize(width: 5, height: 5))
@@ -123,8 +122,7 @@ struct LidShape: Shape {
     }
 }
 
-// Beker
-struct CupShape: Shape {
+fileprivate struct CupShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: rect.minX + 15, y: rect.maxY))
