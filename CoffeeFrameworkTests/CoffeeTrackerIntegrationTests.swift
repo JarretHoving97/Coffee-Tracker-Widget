@@ -11,26 +11,61 @@ import CoffeeFramework
 
 class CoffeeTrackerIntegrationTests {
 
-    let sut: CoffeeTrackController
+    private static let domain = String(describing: CoffeeTrackControllerTests.self)
+    let defaults: UserDefaults
 
     init() {
-        let domain = String(describing: CoffeeTrackControllerTests.self)
+        let domain = CoffeeTrackerIntegrationTests.domain
+
         let defaults = UserDefaults(suiteName: domain)!
         defaults.removePersistentDomain(forName: domain)
-
-        let store = TrackerStore(defaults: defaults, storageKey: "store-\(domain))")
-        self.sut = CoffeeTrackController(date: Date.now, store: store)
+        self.defaults = defaults
     }
 
     deinit {
-        let domain = String(describing: CoffeeTrackControllerTests.self)
+        let domain = CoffeeTrackerIntegrationTests.domain
+
         let defaults = UserDefaults(suiteName: domain)!
         defaults.removePersistentDomain(forName: domain)
     }
 
 
     @Test func doesInit() {
-
+        let sut = makeSUT()
         #expect(sut != nil)
+    }
+
+    @Test func doesIncrement() {
+        let sut = makeSUT()
+        sut.perform(.increment)
+
+        #expect(sut.count == 1)
+    }
+
+    @Test func doesDecrement() {
+        let sut = makeSUT()
+        sut.perform(.increment)
+        sut.perform(.decrement)
+
+        #expect(sut.count == 0)
+    }
+
+    @Test func doesReturnNewStateOnNextDay()  {
+        let sut = makeSUT()
+        sut.perform(.increment)
+        sut.perform(.increment)
+        let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!
+
+        let newSUT = makeSUT(for: nextDay
+        )
+        #expect(newSUT.count == 0)
+    }
+
+
+    // MARK: Helpers
+
+    private func makeSUT(for date: Date = Date.now) -> CoffeeTrackController {
+        let store = TrackerStore(defaults: defaults, storageKey: "store-\(CoffeeTrackerIntegrationTests.domain))")
+        return CoffeeTrackController(date: date, store: store)
     }
 }
