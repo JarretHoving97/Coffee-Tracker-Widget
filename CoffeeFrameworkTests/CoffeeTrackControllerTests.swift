@@ -9,35 +9,6 @@
 import Testing
 import CoffeeFramework
 
-class CoffeeTrackController {
-
-    enum Action {
-        case increment
-        case decrement
-    }
-
-    private let store: TrackerStoreProtocol
-    private let date: Date
-
-    var count: Int {
-        return max(store.retrieve(date) ?? 0, 0)
-    }
-
-    init(date: Date, store: TrackerStoreProtocol) {
-        self.store = store
-        self.date = date
-    }
-
-    func perform(_ action: Action) {
-        switch action {
-        case .increment:
-            store.store(number: count + 1, for: date)
-        case .decrement:
-            store.store(number: count - 1, for: date)
-        }
-    }
-}
-
 struct CoffeeTrackControllerTests {
 
     @Test func doesInit() async throws {
