@@ -10,15 +10,16 @@ import AppIntents
 
 
 public struct CoffeeCupIcon: View {
+
     @State private var percent = 0.0
     @State private var waveOffset = Angle(degrees: 0)
-    @AppStorage("coffeeCount", store: UserDefaults(suiteName: "group.com.jarretdevs.TrackMyCoffee")) private var coffeeCount: Int = 0
-    @AppStorage("lastSavedDate", store: UserDefaults(suiteName: "group.com.jarretdevs.TrackMyCoffee")) private var lastSavedDate: String = ""
 
-    let intent: any AppIntent
+    private var viewModel: CoffeeTrackerViewModel
 
-    public init(intent: any AppIntent) {
-        self.intent = intent
+    init(viewModel: CoffeeTrackerViewModel) {
+        self.viewModel = viewModel
+        self.percent = percent
+        self.waveOffset = waveOffset
     }
 
     public var body: some View {
@@ -49,16 +50,9 @@ public struct CoffeeCupIcon: View {
             }
 
             VStack {
-                Text(coffeeCount.description)
+                Text(viewModel.coffeeCount.description)
                     .font(.largeTitle)
                     .bold()
-
-                Button(intent: intent) {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.black)
-                }
 
                 Button {
                     addCoffee()
@@ -69,19 +63,24 @@ public struct CoffeeCupIcon: View {
                         .foregroundStyle(.black)
                 }
             }
-            .onAppear {
-                checkForNewDay()
-            }
+        }
+        .onAppear {
+            loadView()
         }
     }
 
     private func addCoffee() {
 
         DispatchQueue.main.asyncAfter(deadline: .now() ) {
-            coffeeCount += 1
+            viewModel.increment()
         }
+
+        loadView()
+    }
+
+    public func loadView() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let calc = Double(coffeeCount) / 10.0 * 100
+            let calc = Double(viewModel.coffeeCount) / 10.0 * 100
             percent = min(calc, 100)
         }
         withAnimation(
@@ -92,28 +91,6 @@ public struct CoffeeCupIcon: View {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             waveOffset = Angle(degrees: 0)
-        }
-
-        saveDate()
-    }
-
-    private func saveDate() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        lastSavedDate = formatter.string(from: Date())
-    }
-
-    private func checkForNewDay() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let today = formatter.string(from: Date())
-
-        if today != lastSavedDate {
-            coffeeCount = 0
-            saveDate()
-        } else {
-            let calc = Double(coffeeCount) / 10.0 * 100
-            percent = min(calc, 100)
         }
     }
 }
@@ -138,4 +115,19 @@ struct CupShape: Shape {
         path.closeSubpath()
         return path
     }
+}
+
+
+#Preview {
+    CoffeeCupIcon(
+        viewModel: CoffeeTrackerViewModel(
+            controller: CoffeeTrackController(
+                date: Date.now,
+                store: TrackerStore(
+                    defaults: UserDefaults(suiteName: "preview")!,
+                    storageKey: "key"
+                )
+            )
+        )
+    )
 }
