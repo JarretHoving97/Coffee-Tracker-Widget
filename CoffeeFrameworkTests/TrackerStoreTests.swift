@@ -7,73 +7,61 @@
 
 import Testing
 import Foundation
+import CoffeeFramework
 
-class TrackerStore {
+@Suite(.serialized)
+class CoffeeFrameworkTests{
 
-    private let defaults: UserDefaults
-    private let storageKey = "trackedCoffeNumbers"
+    private static let domain = String(describing: CoffeeFrameworkTests.self)
 
-    init(defaults: UserDefaults) {
-        self.defaults = defaults
+    private let sut: TrackerStore
+
+    init() {
+        let defaults = UserDefaults(suiteName: CoffeeFrameworkTests.domain)!
+        defaults.removePersistentDomain(forName: CoffeeFrameworkTests.domain)
+        sut = TrackerStore(defaults: defaults, storageKey: "test_coffee_tracker")
     }
 
-    func retrieve(_ date: Date) -> Int? {
-        let dictionary = defaults.dictionary(forKey: storageKey) as? [String: Int]
-        return dictionary?[formatDate(date)]
+    deinit {
+        let defaults = UserDefaults(suiteName: CoffeeFrameworkTests.domain)!
+        defaults.removePersistentDomain(forName: CoffeeFrameworkTests.domain)
     }
-
-    func store(number: Int, for date: Date) {
-        var dictionary = defaults.dictionary(forKey: storageKey) as? [String: Int] ?? [:]
-        dictionary[formatDate(date)] = number
-        defaults.setValue(dictionary, forKey: storageKey)
-    }
-
-    // Function to format a Date to a string (e.g., "2025-02-08")
-    func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
-}
-
-struct CoffeeFrameworkTests {
 
     @Test func doesInit() {
-        let sut = makeSUT()
+        let sut = sut
         #expect(sut != nil)
     }
 
     @Test func doesReturnZeroWehaveNotTrackedForDate() {
-        let sut = makeSUT()
+        let sut = sut
         #expect(sut.retrieve(Date()) == nil)
     }
 
     @Test func doesNotReturnZeroWhenWeHaveTrackedForDate() {
-        let sut = makeSUT()
+        let sut = sut
         sut.store(number: 1, for: Date())
         #expect(sut.retrieve(Date()) != nil)
     }
 
     @Test func doesReturnDifferentNumberForDifferentDate() {
-        let sut = makeSUT()
+        let sut = sut
         sut.store(number: 1, for: Date())
         let differentDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         #expect(sut.retrieve(differentDate) == nil)
     }
 
-
     @Test func doesSaveDataInLocalStorage() async throws {
-        let sut1 = makeSUT()
+        let sut1 = sut
         let date = Date()
         sut1.store(number: 1, for: date)
 
-        let sut2 = makeSUT()
+        let sut2 = sut
 
         #expect(sut1.retrieve(date) == sut2.retrieve(date))
     }
 
     @Test func doesReturnNewStateOnNextDay() async throws {
-        let sut = makeSUT()
+        let sut = sut
         let date = Date()
         sut.store(number: 1, for: date)
         
@@ -81,13 +69,5 @@ struct CoffeeFrameworkTests {
 
         #expect(sut.retrieve(date) != sut.retrieve(differentDate))
         #expect(sut.retrieve(differentDate) == nil)
-    }
-
-
-    // MARK: Helpers
-
-    private func makeSUT() -> TrackerStore {
-        let sut = TrackerStore(defaults: UserDefaults(suiteName: "/dev/null")!)
-        return sut
     }
 }
