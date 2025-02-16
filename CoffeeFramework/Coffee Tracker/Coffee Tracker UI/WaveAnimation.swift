@@ -7,18 +7,16 @@
 
 import SwiftUI
 
-struct WaveAnimation: View {
+public struct WaveAnimation: View {
 
     @State private var percent = 40.0
     @State private var waveOffset = Angle(degrees: 0)
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             Wave(offSet: Angle(degrees: waveOffset.degrees), percent: percent)
                 .fill(Color.brown)
                 .ignoresSafeArea(.all)
-
-            InvisibleSlider(percent: $percent)
         }
     
         .onAppear {
@@ -29,17 +27,17 @@ struct WaveAnimation: View {
     }
 }
 
-struct Wave: Shape {
+public struct Wave: Shape {
 
     var offSet: Angle
     var percent: Double
 
-    var animatableData: Double {
+    public var animatableData: Double {
         get { offSet.degrees }
         set { offSet = Angle(degrees: newValue) }
     }
 
-    func path(in rect: CGRect) -> Path {
+    public func path(in rect: CGRect) -> Path {
         var p = Path()
 
         let lowestWave = 0.02
@@ -66,25 +64,6 @@ struct Wave: Shape {
     }
 }
 
-struct InvisibleSlider: View {
-
-    @Binding var percent: Double
-
-    var body: some View {
-        GeometryReader { geo in
-            let dragGesture = DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    let percent = 1.0 - Double(value.location.y / geo.size.height)
-                    self.percent = max(0, min(100, percent * 100))
-                }
-
-            Rectangle()
-                .opacity(0.001)
-                .frame(width: geo.size.width, height: geo.size.height)
-                .gesture(dragGesture)
-        }
-    }
-}
 
 struct WaveAnimation_Previews: PreviewProvider {
     static var previews: some View {

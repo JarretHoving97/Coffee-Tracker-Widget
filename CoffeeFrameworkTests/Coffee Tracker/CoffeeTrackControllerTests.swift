@@ -49,7 +49,7 @@ struct CoffeeTrackControllerTests {
 }
 
 
-class TrackerStoreMock: TrackerStoreProtocol {
+final class TrackerStoreMock: TrackerStoreProtocol {
     var values: [Date: Int] = [:]
     
     func store(number: Int, for date: Date) {

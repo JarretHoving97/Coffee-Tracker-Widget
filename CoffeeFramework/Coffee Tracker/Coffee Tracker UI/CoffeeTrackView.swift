@@ -16,7 +16,7 @@ public struct CoffeeCupIcon: View {
 
     private var viewModel: CoffeeTrackerViewModel
 
-    init(viewModel: CoffeeTrackerViewModel) {
+    public init(viewModel: CoffeeTrackerViewModel) {
         self.viewModel = viewModel
         self.percent = percent
         self.waveOffset = waveOffset
@@ -81,6 +81,8 @@ public struct CoffeeCupIcon: View {
     }
 
     private func removeCoffee() {
+
+
         DispatchQueue.main.asyncAfter(deadline: .now() ) {
             viewModel.decrement()
         }
@@ -114,16 +116,21 @@ public struct CoffeeCupIcon: View {
     }
 }
 
-fileprivate struct LidShape: Shape {
-    func path(in rect: CGRect) -> Path {
+public struct LidShape: Shape {
+    public init() {}
+
+    public func path(in rect: CGRect) -> Path {
         var path = Path()
         path.addRoundedRect(in: rect, cornerSize: CGSize(width: 5, height: 5))
         return path
     }
 }
 
-fileprivate struct CupShape: Shape {
-    func path(in rect: CGRect) -> Path {
+public struct CupShape: Shape {
+
+    public init() {}
+
+    public func path(in rect: CGRect) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: rect.minX + 15, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.maxX - 15, y: rect.maxY))

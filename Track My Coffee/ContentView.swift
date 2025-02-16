@@ -11,8 +11,11 @@ import CoffeeFramework
 
 // Voorvertoning
 struct ContentView: View {
+
     var body: some View {
-        CoffeeCupIcon()
+        CoffeeCupIcon(
+            viewModel: CoffeeTrackerViewModel(controller: CoffeeTrackController(date: .now, store: TrackerStores.coffeeTracker))
+        )
     }
 }
 

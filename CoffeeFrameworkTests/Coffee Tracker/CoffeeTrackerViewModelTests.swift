@@ -8,8 +8,6 @@
 import Testing
 import CoffeeFramework
 
-
-
 struct CoffeeTrackerViewModelTest {
 
     let sut = CoffeeTrackerViewModel(

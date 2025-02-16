@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TrackerStore: TrackerStoreProtocol {
+public final class TrackerStore: TrackerStoreProtocol {
 
     private let defaults: UserDefaults
     private let storageKey: String
@@ -35,3 +35,9 @@ public class TrackerStore: TrackerStoreProtocol {
         return formatter.string(from: date)
     }
 }
+
+public enum TrackerStores {
+    public static let coffeeTracker = TrackerStore(defaults: UserDefaults(suiteName: SuiteName.group)!, storageKey: "coffeeTracker")
+}
+
+extension UserDefaults: @unchecked @retroactive Sendable {}
