@@ -48,13 +48,14 @@ struct CoffeeCupWidget: Widget {
     var body: some WidgetConfiguration {
 
         StaticConfiguration(
-            kind: "widget",
+            kind: "CoffeeCupWidget",
             provider: CoffeeProvider()
         ) { order in
 
             CoffeeCupView(entry: order)
         }
         .configurationDisplayName("Coffee counter")
+                .description("Keep track of your daily coffee consumption.")
     }
 }
 
@@ -67,7 +68,6 @@ struct CoffeeCupView: View {
     var body: some View {
 
         HStack {
-
             Spacer()
 
             ZStack {
@@ -100,23 +100,48 @@ struct CoffeeCupView: View {
 
             Spacer()
 
-            VStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 0) {
+                Spacer()
 
-                Button(intent: AddCoffeeIntent()) {
-                    Image(systemName: "plus")
-                        .foregroundStyle(.black)
-                }
+                VStack(alignment: .center, spacing: 0) {
 
-                Button(intent: DecrementCoffeeIntent()) {
-                    Image(systemName: "minus")
-                        .padding(.vertical, 5)
-                        .foregroundStyle(.black)
-                        .tint(.black)
+
+                    Button(intent: AddCoffeeIntent()) {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .foregroundStyle(Color(uiColor: CoffeeColors.goldenChic)
+                            )
+                        }
+
+
+                    Rectangle()
+                        .frame(height: 1.3)
+                        .foregroundStyle(Color(uiColor: CoffeeColors.goldenChic)
+                        )
+
+
+                    Button(intent: DecrementCoffeeIntent()) {
+                        Image(systemName: "minus")
+                            .frame(width: 19, height: 2)
+                            .padding(.vertical, 4)
+                            .foregroundStyle(Color(uiColor: CoffeeColors.goldenChic)
+                            )
+
+                    }
+
+
                 }
+                .frame(width: 24.7, height: 49.4)
+                .background(.black)
+                .cornerRadius(8)
             }
+
+            .frame(width: 24.7, height: 79.4)
 
         }
         .padding(.bottom, -20)
+
         .containerBackground(for: .widget) {
             
             Color(uiColor: CoffeeColors.goldenChic)
