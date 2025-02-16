@@ -9,33 +9,21 @@ import WidgetKit
 import SwiftUI
 import CoffeeFramework
 
-struct CoffeesConsumedEntry: TimelineEntry {
+struct CoffeesConsumedEntry: TimelineEntry, Equatable {
+
     let date: Date
     let coffees: Int
-}
 
-struct CoffeeProvider: TimelineProvider {
+    var percentage: Double {
+        let calc = Double(coffees) / 10.0 * 100
+        let percent = min(calc, 100)
 
-    private let controller = CoffeeTrackController(date: .now, store: TrackerStores.coffeeTracker)
-
-    typealias Entry = CoffeesConsumedEntry
-    
-    func placeholder(in context: Context) -> CoffeesConsumedEntry {
-        CoffeesConsumedEntry(date: .now, coffees: controller.count)
-    }
-
-    func getSnapshot(in context: Context, completion: @escaping @Sendable (CoffeesConsumedEntry) -> Void) {
-        completion(CoffeesConsumedEntry(date: .now, coffees: controller.count))
-    }
-
-    func getTimeline(in context: Context, completion: @escaping @Sendable (Timeline<CoffeesConsumedEntry>) -> Void) {
-        let timeline = Timeline(entries: [CoffeesConsumedEntry(date: .now, coffees: controller.count)], policy: .atEnd)
-        completion(timeline)
+        return percent
     }
 }
 
 
-struct LastOrderView: View {
+struct CoffeeTrackerView: View {
     let consumed: CoffeesConsumedEntry
 
     init(_ consumed: CoffeesConsumedEntry) {
@@ -63,9 +51,104 @@ struct CoffeeCupWidget: Widget {
             kind: "widget",
             provider: CoffeeProvider()
         ) { order in
-                LastOrderView(order)
+
+            CoffeeCupView(entry: order)
+        }
+        .configurationDisplayName("Coffee counter")
+    }
+}
+
+
+struct CoffeeCupView: View {
+
+
+    let entry: CoffeesConsumedEntry
+
+    var body: some View {
+
+        HStack {
+
+            Spacer()
+
+            ZStack {
+                ZStack {
+                    Wave(
+                        offSet: Angle(degrees: 360),
+                        percent: entry.percentage
+                    )
+                    .fill(Color(uiColor: CoffeeColors.mocha))
+                    .ignoresSafeArea(.all)
+                    .clipShape(CupShape())
+                    .offset(y: 2)
+                    .animation(.linear(duration: 1.0), value: entry.percentage)
+                }
+                .frame(width: 70, height: 80)
+
+                countView
+
+                // Beker
+                CupShape()
+                    .stroke(Color.black, lineWidth: 4)
+                    .frame(width: 70, height: 80)
+
+                // Deksel
+                LidShape()
+                    .stroke(Color.black, lineWidth: 4)
+                    .frame(width: 70, height: 15)
+                    .offset(y: -47)
             }
-        .configurationDisplayName("Coffee Cup Widget")
+
+            Spacer()
+
+            VStack(alignment: .center) {
+
+                Button(intent: AddCoffeeIntent()) {
+                    Image(systemName: "plus")
+                        .foregroundStyle(.black)
+                }
+
+                Button(intent: DecrementCoffeeIntent()) {
+                    Image(systemName: "minus")
+                        .padding(.vertical, 5)
+                        .foregroundStyle(.black)
+                        .tint(.black)
+                }
+            }
+
+        }
+        .padding(.bottom, -20)
+        .containerBackground(for: .widget) {
+            
+            Color(uiColor: CoffeeColors.goldenChic)
+        }
+
+    }
+
+    var countView: some View {
+        ZStack {
+            // Black text (always fully visible)
+            Text("\(entry.coffees)")
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.black)
+                .zIndex(1)
+
+            // White text (masked to follow coffee level)
+            Text("\(entry.coffees)")
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(Color(uiColor: CoffeeColors.goldenChic))
+                .mask(
+                    Wave(
+                        offSet: Angle(degrees: 360),
+                        percent: entry.percentage
+                    )
+                    .frame(width: 70, height: 80)
+                    .offset(y: 2)
+                )
+                .zIndex(3)
+        }
+        .contentTransition(.numericText())
     }
 }
 

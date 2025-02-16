@@ -12,6 +12,11 @@ public struct WaveAnimation: View {
     @State private var percent = 40.0
     @State private var waveOffset = Angle(degrees: 0)
 
+    public init(percent: Double = 40.0, waveOffset: Angle = Angle(degrees: 0)) {
+        self.percent = percent
+        self.waveOffset = waveOffset
+    }
+
     public var body: some View {
         ZStack {
             Wave(offSet: Angle(degrees: waveOffset.degrees), percent: percent)
@@ -20,7 +25,7 @@ public struct WaveAnimation: View {
         }
     
         .onAppear {
-            withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
+            withAnimation(.linear(duration: 1.5).repeatCount(2, autoreverses: false)) {
                 self.waveOffset = Angle(degrees: 360)
             }
         }
@@ -31,6 +36,11 @@ public struct Wave: Shape {
 
     var offSet: Angle
     var percent: Double
+
+    public init(offSet: Angle, percent: Double) {
+        self.offSet = offSet
+        self.percent = percent
+    }
 
     public var animatableData: Double {
         get { offSet.degrees }
