@@ -12,7 +12,6 @@ import AppIntents
 @Observable
 public class CoffeeTrackerViewModel {
 
-    let intent: (any AppIntent)?
 
     public var coffeeCount: Int {
         controller.count
@@ -20,11 +19,10 @@ public class CoffeeTrackerViewModel {
 
     private let controller: CoffeeTrackController
 
-    public init(controller: CoffeeTrackController, intent: (any AppIntent)? = nil) {
+    public init(controller: CoffeeTrackController) {
         self.controller = controller
-        self.intent = intent
-    }
 
+    }
     public func increment() {
         controller.perform(.increment)
     }

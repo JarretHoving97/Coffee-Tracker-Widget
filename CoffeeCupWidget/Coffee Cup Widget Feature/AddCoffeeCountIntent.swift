@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AppIntents
-import CoffeeFramework
+@preconcurrency import CoffeeFramework
 
 public struct AddCoffeeIntent: AppIntent {
 

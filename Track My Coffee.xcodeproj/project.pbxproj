@@ -113,7 +113,7 @@
 		31FC77D72D622CB500CEE693 /* Exceptions for "CoffeeCupWidget" folder in "Track My Coffee" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AddCoffeeCountIntent.swift,
+				"Coffee Cup Widget Feature/AddCoffeeCountIntent.swift",
 			);
 			target = 3145366B2D5569CD003143CB /* Track My Coffee */;
 		};

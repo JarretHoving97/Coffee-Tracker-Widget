@@ -30,7 +30,7 @@ public struct CoffeeCupIcon: View {
                         offSet: Angle(degrees: waveOffset.degrees),
                         percent: percent
                     )
-                    .fill(Color.brown)
+                    .fill(Color(uiColor: CoffeeColors.mocha))
                     .ignoresSafeArea(.all)
                     .clipShape(CupShape())
                     .offset(y: 4)
